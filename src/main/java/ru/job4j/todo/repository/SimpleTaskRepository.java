@@ -9,6 +9,7 @@ import ru.job4j.todo.model.Task;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public class SimpleTaskRepository implements TaskRepository {
@@ -23,7 +24,6 @@ public class SimpleTaskRepository implements TaskRepository {
         Session session = sf.openSession();
         try {
             session.getTransaction().begin();
-            task.setCreated(LocalDateTime.now());
             session.save(task);
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -35,10 +35,22 @@ public class SimpleTaskRepository implements TaskRepository {
     }
 
     @Override
-    public void update(int id, Task task) {
+    public boolean update(int id, Task task) {
         Session session = sf.openSession();
+        var isUpdate = false;
         try {
             session.getTransaction().begin();
+            Query<Task> query = session.createQuery(
+                    """
+                        UPDATE Task
+                        SET name = :name, description = :description, done = :done
+                        WHERE id = :id
+                        """
+                        ).setParameter("name", task.getName())
+                         .setParameter("description", task.getDescription())
+                         .setParameter("done", task.isDone())
+                         .setParameter("id", task.getId());
+            isUpdate = 0 < query.executeUpdate();
             session.update(task);
             session.getTransaction().commit();
         } catch (Exception e) {
@@ -46,22 +58,29 @@ public class SimpleTaskRepository implements TaskRepository {
         } finally {
             session.close();
         }
+        return isUpdate;
     }
 
     @Override
-    public void delete(int id) {
+    public boolean delete(int id) {
         Session session = sf.openSession();
+        var isDelete = false;
         try {
             session.getTransaction().begin();
-            Task task = new Task();
-            task.setId(id);
-            session.delete(task);
+            Query<Task> query = session.createQuery(
+                    """
+                        DELETE FROM Task
+                        WHERE id = :id
+                        """
+            ).setParameter("id", id);
+            isDelete = 0 < query.executeUpdate();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
+        return isDelete;
     }
 
     @Override
@@ -83,22 +102,22 @@ public class SimpleTaskRepository implements TaskRepository {
     }
 
     @Override
-    public Task findById(int id) {
+    public Optional<Task> findById(int id) {
         Session session = sf.openSession();
-        Task task = null;
+        Optional<Task> optionalTask = Optional.empty();
         try {
             session.getTransaction().begin();
             Query<Task> query = session.createQuery(
                     "FROM Task WHERE id = :id", Task.class)
                     .setParameter("id", id);
-            task = query.getSingleResult();
+            optionalTask = query.uniqueResultOptional();
             session.getTransaction().commit();
         } catch (Exception e) {
             session.getTransaction().rollback();
         } finally {
             session.close();
         }
-        return task;
+        return optionalTask;
     }
 
     @Override
@@ -135,5 +154,22 @@ public class SimpleTaskRepository implements TaskRepository {
             session.close();
         }
         return taskList;
+    }
+
+    @Override
+    public boolean complete(int id) {
+        Session session = sf.openSession();
+        var isComplete = false;
+        try {
+            session.getTransaction().begin();
+            Query<Task> query = session.createQuery(
+                    "UPDATE Task SET done = true WHERE id = :id")
+                    .setParameter("id", id);
+            isComplete = 0 < query.executeUpdate();
+            session.getTransaction().commit();
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+        }
+        return isComplete;
     }
 }

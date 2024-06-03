@@ -5,6 +5,7 @@ import ru.job4j.todo.model.Task;
 import ru.job4j.todo.repository.TaskRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SimpleTaskService implements TaskService {
@@ -21,13 +22,18 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public void update(int id, Task task) {
-        taskRepository.update(id, task);
+    public boolean update(int id, Task task) {
+        return taskRepository.update(id, task);
     }
 
     @Override
-    public void delete(int id) {
-        taskRepository.delete(id);
+    public boolean complete(int id) {
+        return taskRepository.complete(id);
+    }
+
+    @Override
+    public boolean delete(int id) {
+         return taskRepository.delete(id);
     }
 
     @Override
@@ -36,7 +42,7 @@ public class SimpleTaskService implements TaskService {
     }
 
     @Override
-    public Task findById(int id) {
+    public Optional<Task> findById(int id) {
         return taskRepository.findById(id);
     }
 
