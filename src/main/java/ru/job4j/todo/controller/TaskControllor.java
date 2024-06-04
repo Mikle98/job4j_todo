@@ -6,6 +6,8 @@ import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.service.TaskService;
 
+import java.util.Optional;
+
 @Controller
 @RequestMapping("/tasks")
 public class TaskControllor {
@@ -66,6 +68,11 @@ public class TaskControllor {
 
     @GetMapping("/edit/{id}")
     public String editView(Model model, @PathVariable int id) {
+        Optional<Task> optionalTask = taskService.findById(id);
+        if (optionalTask.isEmpty()) {
+            model.addAttribute("message", "Не удалось найти задачу для редактирования");
+            return "errors/404";
+        }
         model.addAttribute("task", taskService.findById(id));
         return "tasks/edit";
     }

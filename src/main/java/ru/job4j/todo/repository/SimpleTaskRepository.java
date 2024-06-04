@@ -43,12 +43,11 @@ public class SimpleTaskRepository implements TaskRepository {
             Query<Task> query = session.createQuery(
                     """
                         UPDATE Task
-                        SET name = :name, description = :description, done = :done
+                        SET name = :name, description = :description
                         WHERE id = :id
                         """
                         ).setParameter("name", task.getName())
                          .setParameter("description", task.getDescription())
-                         .setParameter("done", task.isDone())
                          .setParameter("id", task.getId());
             isUpdate = 0 < query.executeUpdate();
             session.update(task);
