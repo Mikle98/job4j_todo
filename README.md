@@ -65,7 +65,7 @@ PostgreSQL 16
 
 В браузере перейдите по ссылке 
 
-```http://localhost:8080/tasks```
+```http://localhost:8080/users/login```
 
 ## Мой контакт 
 
