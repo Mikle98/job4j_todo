@@ -14,9 +14,13 @@ public class SimpleUserStore implements UserStore {
     private final CrudRepository crudRepository;
 
     @Override
-    public User create(User user) {
-        crudRepository.run(session -> session.persist(user));
-        return user;
+    public Optional<User> create(User user) {
+        try {
+            var id = crudRepository.insertReturnSerializable(user);
+            return findById((int) id);
+        } catch (Exception e) {
+            return Optional.empty();
+        }
     }
 
     @Override

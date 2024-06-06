@@ -25,12 +25,10 @@ public class UserControllor {
 
     @PostMapping("/registration")
     public String registration(Model model, @ModelAttribute User user) {
-        var isUser = userService.findByLogin(user.getLogin());
-        if (isUser.isPresent()) {
+        if (userService.create(user).isEmpty()) {
             model.addAttribute("message", "Данный логин уже используется");
             return "errors/404";
         }
-        userService.create(user);
         return "redirect:/users/login";
     }
 

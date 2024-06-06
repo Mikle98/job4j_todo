@@ -7,6 +7,7 @@ import org.hibernate.Transaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.io.Serializable;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -44,16 +45,12 @@ public class CrudRepository {
         );
     }
 
-    public void run(String query, Map<String, Object> args) {
-        Consumer<Session> command = session -> {
-            var sq = session
-                    .createQuery(query);
-            for (Map.Entry<String, Object> arg : args.entrySet()) {
-                sq.setParameter(arg.getKey(), arg.getValue());
-            }
-            sq.executeUpdate();
+    public <T> Serializable insertReturnSerializable(T obj) {
+        Function<Session, Serializable> command = session -> {
+            var sq = session.save(obj);
+            return sq;
         };
-        run(command);
+        return tx(command);
     }
 
     public <T> Optional<T> queryReturnOptional(String query, Class<T> cl, Map<String, Object> args) {
