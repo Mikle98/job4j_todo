@@ -14,10 +14,10 @@ public class SimpleUserStore implements UserStore {
     private final CrudRepository crudRepository;
 
     @Override
-    public Optional<User> create(User user) {
+    public Optional create(User user) {
+
         try {
-            var id = crudRepository.insertReturnSerializable(user);
-            return findById((int) id);
+            return Optional.of(crudRepository.insertReturnSerializable(user));
         } catch (Exception e) {
             return Optional.empty();
         }

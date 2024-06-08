@@ -15,7 +15,7 @@ public class SimpleUserService implements UserService {
     }
 
     @Override
-    public Optional<User> create(User user) {
+    public Optional create(User user) {
         return userStore.create(user);
     }
 

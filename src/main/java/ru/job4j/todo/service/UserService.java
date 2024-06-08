@@ -5,7 +5,7 @@ import ru.job4j.todo.model.User;
 import java.util.Optional;
 
 public interface UserService {
-    public Optional<User> create(User user);
+    public Optional create(User user);
 
     public Optional<User> findById(int id);
 
