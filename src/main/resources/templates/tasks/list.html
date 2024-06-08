@@ -22,6 +22,7 @@
                     <th scope="col">Название</th>
                     <th scope="col">Дата создания</th>
                     <th scope="col">Состояние</th>
+                    <th scope="col">Пользователь</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -29,6 +30,7 @@
                     <td><a th:text="${task.name}" th:href="@{/tasks/{id}(id=${task.id})}"></a></td>
                     <td th:text="${task.created}"/>
                     <td th:text="${task.done}"/>
+                    <td th:text="${task.user}"/>
                 </tr>
                 </tbody>
             </table>
