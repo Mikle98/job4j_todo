@@ -43,9 +43,8 @@ public class TaskControllor {
     }
 
     @PostMapping("/create")
-    public String create(@ModelAttribute Task task, HttpSession session) {
-        System.out.println(session.getAttribute("user"));
-        task.setUser((User) session.getAttribute("user"));
+    public String create(@ModelAttribute Task task, @SessionAttribute User user) {
+        task.setUser(user);
         taskService.create(task);
         return "redirect:/tasks";
     }
