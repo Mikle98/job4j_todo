@@ -43,7 +43,8 @@ public class SimpleTaskRepository implements TaskRepository {
 
     @Override
     public List<Task> findAll() {
-        return crudRepository.queryReturnList("FROM Task", Task.class);
+        return crudRepository.queryReturnList("FROM Task f JOIN FETCH f.priority",
+                Task.class);
     }
 
     @Override
