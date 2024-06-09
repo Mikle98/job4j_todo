@@ -1,14 +1,17 @@
 package ru.job4j.todo.repository;
 
+import lombok.extern.slf4j.Slf4j;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Repository;
 import ru.job4j.todo.model.User;
+
 
 import java.util.Map;
 import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
+@Slf4j
 public class SimpleUserStore implements UserStore {
 
     private final CrudRepository crudRepository;
@@ -19,8 +22,9 @@ public class SimpleUserStore implements UserStore {
         try {
             return Optional.of(crudRepository.insertReturnSerializable(user));
         } catch (Exception e) {
-            return Optional.empty();
+            log.error(e.getMessage());
         }
+        return Optional.empty();
     }
 
     @Override
