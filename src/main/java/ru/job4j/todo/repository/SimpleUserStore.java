@@ -22,7 +22,7 @@ public class SimpleUserStore implements UserStore {
         try {
             return Optional.of(crudRepository.insertReturnSerializable(user));
         } catch (Exception e) {
-            log.error(e.getMessage());
+            log.error(e.getMessage(), e);
         }
         return Optional.empty();
     }
