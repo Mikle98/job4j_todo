@@ -24,12 +24,14 @@ public class SimpleTaskRepository implements TaskRepository {
     public boolean update(int id, Task task) {
         return crudRepository.queryReturnBoolean("""
                         UPDATE Task
-                        SET name = :name, description = :description
+                        SET name = :name, description = :description, 
+                        priority = :priority
                         WHERE id = :id
                         """,
                         Map.of("name", task.getName(),
                                 "description", task.getDescription(),
-                                "id", task.getId()));
+                                "id", task.getId(),
+                                "priority", task.getPriority()));
     }
 
     @Override
@@ -49,7 +51,7 @@ public class SimpleTaskRepository implements TaskRepository {
 
     @Override
     public Optional<Task> findById(int id) {
-        return crudRepository.queryReturnOptional("FROM Task WHERE id = :id",
+        return crudRepository.queryReturnOptional("FROM Task f JOIN FETCH f.priority WHERE f.id = :id",
                                                     Task.class,
                                                     Map.of("id", id));
     }

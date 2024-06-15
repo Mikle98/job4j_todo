@@ -24,6 +24,12 @@
                 <label for="description" class="form-label"><b>Описание</b></label>
                 <input type="text" class="form-control" id="description" name="description" placeholder="Введите описание">
             </div>
+            <div class="mb-3">
+                <label for="priority" class="from-label"><b>Приоритет</b></label>
+                <select class="form-control" id="priority" name="priority">
+                    <option th:each="pr : ${priority}" th:value="${pr.id}" th:text="${pr.name}"></option>
+                </select>
+            </div>
             <div class="mb-3 row">
                 <div class="col-6"></div>
                 <div class="col-6">

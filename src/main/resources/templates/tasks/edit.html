@@ -33,6 +33,12 @@
                         <label class="form-check-label" for="done">Выполнено</label>
                     </div>
                 </div>
+                <div class="mb-3">
+                    <label for="priority" class="from-label"><b>Приоритет</b></label>
+                    <select class="form-control" id="priority" name="priority">
+                        <option th:each="pr : ${priority}" th:value="${pr.id}" th:text="${pr.name}"></option>
+                    </select>
+                </div>
             </div>
             <div class="mb-3 row">
                 <div class="col-6"></div>

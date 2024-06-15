@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
 import javax.servlet.http.HttpSession;
@@ -14,9 +15,11 @@ import java.util.Optional;
 @RequestMapping("/tasks")
 public class TaskControllor {
     private final TaskService taskService;
+    private final PriorityService priorityService;
 
-    public TaskControllor(TaskService taskService) {
+    public TaskControllor(TaskService taskService, PriorityService priorityService) {
         this.taskService = taskService;
+        this.priorityService = priorityService;
     }
 
     @GetMapping
@@ -38,7 +41,8 @@ public class TaskControllor {
     }
 
     @GetMapping("/create")
-    public String createView() {
+    public String createView(Model model) {
+        model.addAttribute("priority", priorityService.findAll());
         return "tasks/create";
     }
 
@@ -71,6 +75,7 @@ public class TaskControllor {
 
     @GetMapping("/edit/{id}")
     public String editView(Model model, @PathVariable int id) {
+        model.addAttribute("priority", priorityService.findAll());
         Optional<Task> optionalTask = taskService.findById(id);
         if (optionalTask.isEmpty()) {
             model.addAttribute("message", "Не удалось найти задачу для редактирования");
