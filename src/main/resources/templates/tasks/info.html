@@ -32,8 +32,12 @@
                     <input type="checkbox" name="done" class="form-check-input" id="done" onclick="return false;">
                 </div>
                 <div class="mb-3">
-                    <label for="priority" class="form-label"><b>Описание</b></label>
+                    <label for="priority" class="form-label"><b>Приоритет</b></label>
                     <textarea class="form-control" id="priority" name="priority" th:field="*{priority.name}" readonly></textarea>
+                </div>
+                <div class="mb-3">
+                    <label for="categories" class="form-label"><b>Категория</b></label>
+                    <input type="text" class="form-control" id="categories" name="categories" th:field="*{categories}" readonly>
                 </div>
             </div>
         </div>

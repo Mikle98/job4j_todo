@@ -19,6 +19,7 @@
             <table class="table">
                 <thead>
                 <tr>
+                    <th scope="col">Категория</th>
                     <th scope="col">Приоритет</th>
                     <th scope="col">Название</th>
                     <th scope="col">Дата создания</th>
@@ -28,6 +29,7 @@
                 </thead>
                 <tbody>
                 <tr th:each="task: ${tasks}">
+                    <td th:text="${task.categories}"/>
                     <td th:text="${task.priority.name}"/>
                     <td><a th:text="${task.name}" th:href="@{/tasks/{id}(id=${task.id})}"></a></td>
                     <td th:text="${task.created}"/>

@@ -5,6 +5,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import ru.job4j.todo.model.Task;
 import ru.job4j.todo.model.User;
+import ru.job4j.todo.service.CategoryService;
 import ru.job4j.todo.service.PriorityService;
 import ru.job4j.todo.service.TaskService;
 
@@ -16,8 +17,11 @@ import java.util.Optional;
 public class TaskControllor {
     private final TaskService taskService;
     private final PriorityService priorityService;
+    private final CategoryService categoryService;
 
-    public TaskControllor(TaskService taskService, PriorityService priorityService) {
+    public TaskControllor(TaskService taskService, PriorityService priorityService,
+                          CategoryService categoryService) {
+        this.categoryService = categoryService;
         this.taskService = taskService;
         this.priorityService = priorityService;
     }
@@ -42,6 +46,7 @@ public class TaskControllor {
 
     @GetMapping("/create")
     public String createView(Model model) {
+        model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("priority", priorityService.findAll());
         return "tasks/create";
     }
@@ -75,6 +80,7 @@ public class TaskControllor {
 
     @GetMapping("/edit/{id}")
     public String editView(Model model, @PathVariable int id) {
+        model.addAttribute("categories", categoryService.findAll());
         model.addAttribute("priority", priorityService.findAll());
         Optional<Task> optionalTask = taskService.findById(id);
         if (optionalTask.isEmpty()) {

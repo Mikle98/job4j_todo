@@ -3,6 +3,7 @@ package ru.job4j.todo.repository;
 import lombok.AllArgsConstructor;
 import org.hibernate.Session;
 import org.springframework.stereotype.Repository;
+import ru.job4j.todo.model.Category;
 import ru.job4j.todo.model.Task;
 
 import java.util.List;
@@ -24,14 +25,15 @@ public class SimpleTaskRepository implements TaskRepository {
     public boolean update(int id, Task task) {
         return crudRepository.queryReturnBoolean("""
                         UPDATE Task
-                        SET name = :name, description = :description, 
+                        SET name = :name, description = :description,
                         priority = :priority
                         WHERE id = :id
                         """,
                         Map.of("name", task.getName(),
                                 "description", task.getDescription(),
                                 "id", task.getId(),
-                                "priority", task.getPriority()));
+                                "priority", task.getPriority(),
+                                "categories", task.getCategories()));
     }
 
     @Override
@@ -45,13 +47,26 @@ public class SimpleTaskRepository implements TaskRepository {
 
     @Override
     public List<Task> findAll() {
-        return crudRepository.queryReturnList("FROM Task f JOIN FETCH f.priority",
+        return crudRepository.queryReturnList(
+                """
+                SELECT DISTINCT
+                f
+                FROM Task f 
+                JOIN FETCH f.priority
+                JOIN FETCH f.categories
+                """,
                 Task.class);
     }
 
     @Override
     public Optional<Task> findById(int id) {
-        return crudRepository.queryReturnOptional("FROM Task f JOIN FETCH f.priority WHERE f.id = :id",
+        return crudRepository.queryReturnOptional(
+                                            """
+                                                  FROM Task f
+                                                  JOIN FETCH f.priority
+                                                  JOIN FETCH f.categories
+                                                  where f.id = :id
+                                                  """,
                                                     Task.class,
                                                     Map.of("id", id));
     }
